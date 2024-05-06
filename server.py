@@ -1,11 +1,15 @@
-from telebot import TeleBot
-import urllib.parse
-import requests
-import os
 import asyncio
+import os
+import urllib.parse
 
-from oss import audio_download, audio_exists, audio_del
+import requests
+from telebot import TeleBot
+from dotenv import load_dotenv
 
+from oss import audio_del, audio_download, audio_exists
+
+# 加载环境变量
+load_dotenv()
 
 # 创建一个机器人实例
 bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
