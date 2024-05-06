@@ -15,8 +15,6 @@ ai_server = os.getenv("AI_SERVER")
 
 bot_instance = TeleBot(bot_token)
 
-bot_instance.set_webhook()
-
 
 @bot_instance.message_handler(commands=['start'])
 def send_welcome(message):
@@ -65,5 +63,9 @@ async def check_audio(message: any, target_dir:str, filename: str):
             print("waiting")
             await asyncio.sleep(1)  # 使用asyncio.sleep(1)来等待1秒
 
-# 启动服务
-bot_instance.infinity_polling()
+try:
+    # 启动服务
+    bot_instance.infinity_polling()
+except Exception as e:
+    print("启动服务出错:", e)
+    bot_instance.stop_polling()
