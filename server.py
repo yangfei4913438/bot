@@ -26,10 +26,9 @@ def echo_all(message):
     try:
         print("发送消息:", message.text)
         encode_text = urllib.parse.quote(message.text)
-        response = requests.post(
-            url=f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}',
-            timeout=100
-        )
+        url = f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}'
+        print("请求地址:", url)
+        response = requests.post(url=url,timeout=100)
 
         if response.status_code == 200:
             print("返回数据:", response.json())
@@ -39,6 +38,9 @@ def echo_all(message):
                 asyncio.run(check_audio(message, 'audio', f"{data["id"]}.mp3"))
             else:
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
+        else:
+            print("请求出错:", response.status_code, response.text)
+            bot_instance.reply_to(message, "对不起，我不知道怎么回复你")        
 
     except requests.RequestException as e:
         print("发送消息出错:", e)
