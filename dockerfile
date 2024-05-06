@@ -12,8 +12,5 @@ RUN pip install pipenv
 # 安装依赖
 RUN pipenv sync --system
 
-# 暴露所有端口范围
-EXPOSE 1-65535
-
 # 设置启动命令
 CMD ["python", "server.py"]
