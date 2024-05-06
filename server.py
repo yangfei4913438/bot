@@ -1,4 +1,4 @@
-import telebot
+from telebot import TeleBot
 import urllib.parse
 import requests
 import os
@@ -10,10 +10,10 @@ from oss import audio_download, audio_exists, audio_del
 # 加载环境变量配置文件
 load_dotenv()
 
-bot_api = os.getenv("BOT_API")
+bot_token = os.getenv("BOT_TOKEN")
 ai_server = os.getenv("AI_SERVER")
 
-bot_instance = telebot.TeleBot(token=bot_api)
+bot_instance = TeleBot(bot_token)
 
 bot_instance.set_webhook()
 
