@@ -13,6 +13,9 @@ load_dotenv()
 bot_token = os.getenv("BOT_TOKEN")
 ai_server = os.getenv("AI_SERVER")
 
+print("BOT_TOKEN:", bot_token)
+print("AI_SERVER:", ai_server)
+
 bot_instance = TeleBot(bot_token)
 
 
