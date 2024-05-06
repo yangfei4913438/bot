@@ -12,6 +12,27 @@ from oss import audio_del, audio_download, audio_exists
 # 加载环境变量
 load_dotenv()
 
+# 创建日志记录器
+logger = logging.getLogger('myapp')
+logger.setLevel(logging.DEBUG)
+
+# 创建一个用于写入日志文件的处理器
+handler = logging.FileHandler('bot.log')
+handler.setLevel(logging.DEBUG)
+
+# 创建一个用于控制台输出的处理器
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# 设置日志格式
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
+
+# 给日志记录器添加处理器
+logger.addHandler(handler)
+logger.addHandler(console_handler)
+
 # 创建一个机器人实例
 bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
 
@@ -43,11 +64,11 @@ def echo_all(message):
             else:
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
         else:
-            logging.info("请求出错: %s, %s", response.status_code, response.text)
+            logging.error("请求出错: %s, %s", response.status_code, response.text)
             bot_instance.reply_to(message, "对不起，我不知道怎么回复你")        
 
     except requests.RequestException as e:
-        logging.info("发送消息出错: %o", e)
+        logging.error("发送消息出错: %s", e)
         bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
 
@@ -64,7 +85,7 @@ async def check_audio(message: any, target_dir:str, filename: str):
             audio_del(target_dir, filename)
             break
         else:
-            print("waiting")
+            logging.info("waiting")
             await asyncio.sleep(1)  # 使用asyncio.sleep(1)来等待1秒
 
 try:
@@ -72,5 +93,5 @@ try:
     logging.info('启动服务')
     bot_instance.polling(logger_level=20)
 except Exception as e:
-    logging.error("启动服务出错: %o", e)
+    logging.error("启动服务出错: %s", e)
     bot_instance.stop_polling()
