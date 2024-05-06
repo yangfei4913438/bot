@@ -3,20 +3,12 @@ import urllib.parse
 import requests
 import os
 import asyncio
-from dotenv import load_dotenv
 
 from oss import audio_download, audio_exists, audio_del
 
-# 加载环境变量配置文件
-load_dotenv()
 
-bot_token = os.getenv("BOT_TOKEN")
-ai_server = os.getenv("AI_SERVER")
-
-print("BOT_TOKEN:", bot_token)
-print("AI_SERVER:", ai_server)
-
-bot_instance = TeleBot(bot_token)
+# 创建一个机器人实例
+bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
 
 
 @bot_instance.message_handler(commands=['start'])
@@ -30,9 +22,8 @@ def echo_all(message):
     try:
         print("发送消息:", message.text)
         encode_text = urllib.parse.quote(message.text)
-        base_url = ai_server
         response = requests.post(
-            url=f'{base_url}/chat?user_id={message.chat.id}&query={encode_text}',
+            url=f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}',
             timeout=100
         )
 
