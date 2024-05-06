@@ -68,7 +68,7 @@ async def check_audio(message: any, target_dir:str, filename: str):
 
 try:
     # 启动服务
-    bot_instance.infinity_polling()
+    bot_instance.polling(logger_level=20)
 except Exception as e:
     print("启动服务出错:", e)
     bot_instance.stop_polling()
