@@ -15,10 +15,11 @@ ai_server = os.getenv("AI_SERVER")
 
 bot_instance = telebot.TeleBot(token=bot_api)
 
+bot_instance.set_webhook()
+
 
 @bot_instance.message_handler(commands=['start'])
 def send_welcome(message):
-    print("发送消息:", message.text)
     # 直接回复
     bot_instance.send_message(message.chat.id, "你好! 我是周半仙，有什么可以帮助你的吗？")
 
