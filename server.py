@@ -1,5 +1,6 @@
 import asyncio
 import os
+import logging
 import urllib.parse
 
 import requests
@@ -17,21 +18,24 @@ bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
 
 @bot_instance.message_handler(commands=['start'])
 def send_welcome(message):
+    """ 欢迎消息 """
+    logging.info("收到消息: %s", message.text)
     # 直接回复
     bot_instance.send_message(message.chat.id, "你好! 我是周半仙，有什么可以帮助你的吗？")
 
 
 @bot_instance.message_handler(func=lambda message: True)
 def echo_all(message):
+    """ 消息处理 """
     try:
-        print("发送消息:", message.text)
+        logging.info("发送消息: %s", message.text)
         encode_text = urllib.parse.quote(message.text)
         url = f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}'
-        print("请求地址:", url)
+        logging.info("请求地址: %s", url)
         response = requests.post(url=url,timeout=100)
 
         if response.status_code == 200:
-            print("返回数据:", response.json())
+            logging.info("返回数据: %o", response.json())
             data = response.json()
             if "msg" in data:
                 bot_instance.reply_to(message, data["msg"].encode('utf-8'))
@@ -39,11 +43,11 @@ def echo_all(message):
             else:
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
         else:
-            print("请求出错:", response.status_code, response.text)
+            logging.info("请求出错: %s, %s", response.status_code, response.text)
             bot_instance.reply_to(message, "对不起，我不知道怎么回复你")        
 
     except requests.RequestException as e:
-        print("发送消息出错:", e)
+        logging.info("发送消息出错: %o", e)
         bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
 
@@ -65,7 +69,8 @@ async def check_audio(message: any, target_dir:str, filename: str):
 
 try:
     # 启动服务
+    logging.info('启动服务')
     bot_instance.polling(logger_level=20)
 except Exception as e:
-    print("启动服务出错:", e)
+    logging.error("启动服务出错: %o", e)
     bot_instance.stop_polling()
