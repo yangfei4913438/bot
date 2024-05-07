@@ -12,6 +12,7 @@ name = "tsinghua"
 telebot = "*"
 oss2 = "*"
 python-dotenv = "*"
+pytz = "*"
 
 [dev-packages]
 

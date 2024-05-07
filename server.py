@@ -1,37 +1,14 @@
 import asyncio
 import os
-import logging
-import urllib.parse
-
 import requests
 from telebot import TeleBot
 from dotenv import load_dotenv
 
 from oss import audio_del, audio_download, audio_exists
+from custom_log import log
 
 # 加载环境变量
 load_dotenv()
-
-# 创建日志记录器
-log = logging.getLogger('bot')
-log.setLevel(logging.INFO)
-
-# 创建一个用于写入日志文件的处理器
-handler = logging.FileHandler('/logs/bot.log')
-handler.setLevel(logging.INFO)
-
-# 创建一个用于控制台输出的处理器
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-
-# 设置日志格式
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-console_handler.setFormatter(formatter)
-
-# 给日志记录器添加处理器
-log.addHandler(handler)
-log.addHandler(console_handler)
 
 # 创建一个机器人实例
 bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
@@ -50,16 +27,16 @@ def echo_all(message):
     """ 消息处理 """
     try:
         log.info("发送消息: %s", message.text)
-        
+
         url = f'{os.getenv("AI_SERVER")}/chat'
         log.info("请求地址: %s", url)
-        
+
         data = {
             "user_id": message.chat.id,
             "query": message.text
         }
         log.info("请求数据: %s", data)
-        
+
         response = requests.post(url=url, json=data, timeout=100)
 
         if response.status_code == 200:
@@ -72,14 +49,14 @@ def echo_all(message):
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
         else:
             log.error("请求出错: %s, %s", response.status_code, response.text)
-            bot_instance.reply_to(message, "对不起，我不知道怎么回复你")        
+            bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
-    except requests.RequestException as e:
-        log.error("发送消息出错: %s", e)
+    except requests.RequestException as err:
+        log.error("发送消息出错: %s", err)
         bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
 
-async def check_audio(message: any, target_dir:str, filename: str):
+async def check_audio(message: any, target_dir: str, filename: str):
     """ 检查音频是否存在并发送 """
     while True:
         # 检查音频是否存在
