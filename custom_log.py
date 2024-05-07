@@ -32,7 +32,7 @@ class CustomFormatter(logging.Formatter):
         if datefmt:
             return dt.strftime(datefmt)
         else:
-            return dt.strftime("%Y-%m-%d %H:%M:%S.%f")[:22]  # 切片操作获取到毫秒级别的前三位
+            return dt.strftime("%Y-%m-%d %H:%M:%S.%f")[:23]  # 切片操作获取到毫秒级别的前三位
 
 
 # 设置日志格式
