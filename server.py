@@ -50,10 +50,17 @@ def echo_all(message):
     """ 消息处理 """
     try:
         log.info("发送消息: %s", message.text)
-        encode_text = urllib.parse.quote(message.text)
-        url = f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}'
+        
+        url = f'{os.getenv("AI_SERVER")}/chat'
         log.info("请求地址: %s", url)
-        response = requests.post(url=url,timeout=100)
+        
+        data = {
+            "user_id": message.chat.id,
+            "query": message.text
+        }
+        log.info("请求数据: %s", data)
+        
+        response = requests.post(url=url, data=data, timeout=100)
 
         if response.status_code == 200:
             log.info("返回数据: %o", response.json())
