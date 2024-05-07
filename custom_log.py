@@ -4,6 +4,10 @@ from pytz import timezone
 from datetime import datetime, time
 import os
 
+from dotenv import load_dotenv
+# 加载环境变量
+load_dotenv()
+
 
 # 创建日志记录器
 log = logging.getLogger('bot')
@@ -16,7 +20,7 @@ console_handler.setLevel(logging.INFO)
 
 # 创建一个处理器，用于写入日志文件，同时按周分割日志文件，每周一0点0分1秒切换
 handler = TimedRotatingFileHandler(
-    filename=os.getenv('LOG_PATH'),
+    filename=os.getenv("LOG_PATH"),
     when="W0",
     interval=1,
     atTime=time(0, 0, 1)
