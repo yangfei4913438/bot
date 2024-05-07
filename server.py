@@ -42,7 +42,7 @@ def send_welcome(message):
     """ 欢迎消息 """
     log.info("收到消息: %s", message.text)
     # 直接回复
-    bot_instance.send_message(message.chat.id, "你好! 我是周半仙，有什么可以帮助你的吗？")
+    bot_instance.send_message(message.chat.id, "你好! 有什么可以帮助你的吗?")
 
 
 @bot_instance.message_handler(func=lambda message: True)
