@@ -2,6 +2,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 from pytz import timezone
 from datetime import datetime, time
+import os
 
 
 # 创建日志记录器
@@ -15,7 +16,11 @@ console_handler.setLevel(logging.INFO)
 
 # 创建一个处理器，用于写入日志文件，同时按周分割日志文件，每周一0点0分1秒切换
 handler = TimedRotatingFileHandler(
-    '/logs/bot.log', when="W0", interval=1, atTime=time(0, 0, 1))
+    filename=os.getenv('LOG_PATH'),
+    when="W0",
+    interval=1,
+    atTime=time(0, 0, 1)
+)
 handler.suffix = "%Y-%m-%d"
 handler.setLevel(logging.INFO)
 
