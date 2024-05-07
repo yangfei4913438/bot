@@ -13,8 +13,8 @@ from oss import audio_del, audio_download, audio_exists
 load_dotenv()
 
 # 创建日志记录器
-logger = logging.getLogger('bot')
-logger.setLevel(logging.INFO)
+log = logging.getLogger('bot')
+log.setLevel(logging.INFO)
 
 # 创建一个用于写入日志文件的处理器
 handler = logging.FileHandler('/logs/bot.log')
@@ -30,8 +30,8 @@ handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
 # 给日志记录器添加处理器
-logger.addHandler(handler)
-logger.addHandler(console_handler)
+log.addHandler(handler)
+log.addHandler(console_handler)
 
 # 创建一个机器人实例
 bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
@@ -40,7 +40,7 @@ bot_instance = TeleBot(os.getenv("BOT_TOKEN"))
 @bot_instance.message_handler(commands=['start'])
 def send_welcome(message):
     """ 欢迎消息 """
-    logging.info("收到消息: %s", message.text)
+    log.info("收到消息: %s", message.text)
     # 直接回复
     bot_instance.send_message(message.chat.id, "你好! 我是周半仙，有什么可以帮助你的吗？")
 
@@ -49,14 +49,14 @@ def send_welcome(message):
 def echo_all(message):
     """ 消息处理 """
     try:
-        logging.info("发送消息: %s", message.text)
+        log.info("发送消息: %s", message.text)
         encode_text = urllib.parse.quote(message.text)
         url = f'{os.getenv("AI_SERVER")}/chat?user_id={message.chat.id}&query={encode_text}'
-        logging.info("请求地址: %s", url)
+        log.info("请求地址: %s", url)
         response = requests.post(url=url,timeout=100)
 
         if response.status_code == 200:
-            logging.info("返回数据: %o", response.json())
+            log.info("返回数据: %o", response.json())
             data = response.json()
             if "msg" in data:
                 bot_instance.reply_to(message, data["msg"].encode('utf-8'))
@@ -64,11 +64,11 @@ def echo_all(message):
             else:
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
         else:
-            logging.error("请求出错: %s, %s", response.status_code, response.text)
+            log.error("请求出错: %s, %s", response.status_code, response.text)
             bot_instance.reply_to(message, "对不起，我不知道怎么回复你")        
 
     except requests.RequestException as e:
-        logging.error("发送消息出错: %s", e)
+        log.error("发送消息出错: %s", e)
         bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
 
@@ -85,13 +85,13 @@ async def check_audio(message: any, target_dir:str, filename: str):
             audio_del(target_dir, filename)
             break
         else:
-            logging.info("waiting")
+            log.debug("waiting")
             await asyncio.sleep(1)  # 使用asyncio.sleep(1)来等待1秒
 
 try:
     # 启动服务
-    logging.info('启动服务')
+    log.info('启动服务')
     bot_instance.polling(logger_level=20)
 except Exception as e:
-    logging.error("启动服务出错: %s", e)
+    log.error("启动服务出错: %s", e)
     bot_instance.stop_polling()
