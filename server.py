@@ -13,12 +13,12 @@ from oss import audio_del, audio_download, audio_exists
 load_dotenv()
 
 # 创建日志记录器
-logger = logging.getLogger('myapp')
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger('bot')
+logger.setLevel(logging.INFO)
 
 # 创建一个用于写入日志文件的处理器
-handler = logging.FileHandler('bot.log')
-handler.setLevel(logging.DEBUG)
+handler = logging.FileHandler('/logs/bot.log')
+handler.setLevel(logging.INFO)
 
 # 创建一个用于控制台输出的处理器
 console_handler = logging.StreamHandler()
