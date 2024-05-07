@@ -32,7 +32,7 @@ def echo_all(message):
         log.info("请求地址: %s", url)
 
         data = {
-            "user_id": message.chat.id,
+            "user_id": str(message.chat.id),
             "query": message.text
         }
         log.info("请求数据: %s", data)

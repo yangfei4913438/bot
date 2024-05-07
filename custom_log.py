@@ -32,12 +32,16 @@ class CustomFormatter(logging.Formatter):
         if datefmt:
             return dt.strftime(datefmt)
         else:
-            return dt.strftime("%Y-%m-%d %H:%M:%S")
+            return dt.strftime("%Y-%m-%d %H:%M:%S.%f")[:22]  # 切片操作获取到毫秒级别的前三位
 
 
-formatter = CustomFormatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# 设置日志格式
+fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
+# 创建一个自定义格式化器
+formatter = CustomFormatter(fmt=fmt)
+
+# 给处理器设置格式化器
 handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
