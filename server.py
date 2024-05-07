@@ -60,7 +60,7 @@ def echo_all(message):
         }
         log.info("请求数据: %s", data)
         
-        response = requests.post(url=url, data=data, timeout=100)
+        response = requests.post(url=url, json=data, timeout=100)
 
         if response.status_code == 200:
             log.info("返回数据: %o", response.json())
