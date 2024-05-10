@@ -39,8 +39,8 @@ def echo_all(message):
 
         headers = {
             "Authorization": "Bearer ",  # 这里不需要token，但是头部必须有这个 key，否则会报错
-            "Role": os.getenv("ADMIN_ROLE"),
-            "UserId": os.getenv("ADMIN_USER_ID"),
+            "Role": os.getenv("ADMIN_ROLE"),  # 这里是用户的特权，绕过 token 校验
+            "UserId": message.chat.id,  # 这里是用户的id，用于记录用户的聊天记录
         }
 
         response = requests.post(
