@@ -42,7 +42,6 @@ def echo_all(message):
             "Role": os.getenv("ADMIN_ROLE"),  # 这里是用户的特权，绕过 token 校验
             "UserId": str(message.chat.id),  # 这里是用户的id，用于记录用户的聊天记录
         }
-        log.info("请求头: %s", headers)
 
         response = requests.post(
             url=url, json=data, timeout=100, headers=headers)
