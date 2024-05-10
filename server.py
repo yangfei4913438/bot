@@ -33,12 +33,12 @@ def echo_all(message):
         log.info("请求地址: %s", url)
 
         data = {
-            "user_id": str(message.chat.id),
             "query": message.text
         }
         log.info("请求数据: %s", data)
 
         headers = {
+            "Authorization": "Bearer ",  # 这里不需要token，但是头部必须有这个 key，否则会报错
             "Role": os.getenv("ADMIN_ROLE"),
             "UserId": os.getenv("ADMIN_USER_ID"),
         }
