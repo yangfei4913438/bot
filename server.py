@@ -38,7 +38,13 @@ def echo_all(message):
         }
         log.info("请求数据: %s", data)
 
-        response = requests.post(url=url, json=data, timeout=100)
+        headers = {
+            "Role": os.getenv("ADMIN_ROLE"),
+            "UserId": os.getenv("ADMIN_USER_ID"),
+        }
+
+        response = requests.post(
+            url=url, json=data, timeout=100, headers=headers)
 
         if response.status_code == 200:
             log.info("返回数据: %o", response.json())
