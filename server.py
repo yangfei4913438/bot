@@ -47,18 +47,19 @@ def echo_all(message):
             url=url, json=data, timeout=100, headers=headers)
 
         if response.status_code == 200:
-            log.info("返回数据: %o", response.json())
+            log.info("返回数据: %s", response.json())
             data = response.json()
             if "msg" in data:
                 bot_instance.reply_to(message, data["msg"].encode('utf-8'))
                 asyncio.run(check_audio(message, 'audio', f"{data["id"]}.mp3"))
             else:
+                log.error("ai服务器返回的数据结构异常: %s", data)
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
         else:
-            log.error("请求出错: %s, %s", response.status_code, response.text)
+            log.error("请求ai服务端出错: %s", response)
             bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
-    except requests.RequestException as err:
+    except Exception as err:
         log.error("发送消息出错: %s", err)
         bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
@@ -76,7 +77,7 @@ async def check_audio(message: any, target_dir: str, filename: str):
             audio_del(target_dir, filename)
             break
         else:
-            log.debug("waiting")
+            log.debug("等待 1 秒重试...")
             await asyncio.sleep(1)  # 使用asyncio.sleep(1)来等待1秒
 
 try:
