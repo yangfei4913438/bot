@@ -14,7 +14,7 @@ auth = oss2.ProviderAuth(EnvironmentVariableCredentialsProvider())
 bucket = oss2.Bucket(
     auth=auth,
     endpoint='https://oss-cn-hongkong.aliyuncs.com',
-    bucket_name='yangfei-ai'
+    bucket_name='yangfei-chat'
 )
 
 
