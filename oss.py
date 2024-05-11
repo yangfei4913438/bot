@@ -13,8 +13,8 @@ auth = oss2.ProviderAuth(EnvironmentVariableCredentialsProvider())
 # yourBucketName填写存储空间名称。
 bucket = oss2.Bucket(
     auth=auth,
-    endpoint='https://oss-cn-shanghai.aliyuncs.com',
-    bucket_name='yangfei-wiki'
+    endpoint='https://oss-cn-hongkong.aliyuncs.com',
+    bucket_name='yangfei-ai'
 )
 
 
