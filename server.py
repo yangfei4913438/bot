@@ -44,6 +44,8 @@ def echo_all(message):
             "UserId": str(message.chat.id),  # 这里是用户的id，用于记录用户的聊天记录
         }
 
+        bot_instance.reply_to(message, "小友，请稍后片刻...")
+
         with requests.post(
                 url=url, json=data, timeout=100, headers=headers, stream=True) as response:
             if response.status_code == 200:
@@ -52,8 +54,7 @@ def echo_all(message):
                     if line:
                         decoded_line = line.decode('utf-8')
                         log.info("返回数据: %s", decoded_line)
-                        bot_instance.send_message(
-                            message.chat.id, decoded_line)
+                        bot_instance.reply_to(message, decoded_line)
                         text += decoded_line
 
                 if text:
