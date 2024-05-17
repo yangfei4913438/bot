@@ -4,6 +4,7 @@ from telebot import TeleBot
 import requests
 import os
 import asyncio
+import json
 
 
 from dotenv import load_dotenv
@@ -43,21 +44,28 @@ def echo_all(message):
             "UserId": str(message.chat.id),  # 这里是用户的id，用于记录用户的聊天记录
         }
 
-        response = requests.post(
-            url=url, json=data, timeout=100, headers=headers)
+        with requests.post(
+                url=url, json=data, timeout=100, headers=headers, stream=True) as response:
+            if response.status_code == 200:
+                text = ''
+                for line in response.iter_lines():
+                    if line:
+                        decoded_line = line.decode('utf-8')
+                        log.info("返回数据: %s", decoded_line)
+                        bot_instance.send_message(
+                            message.chat.id, decoded_line)
+                        text += decoded_line
 
-        if response.status_code == 200:
-            log.info("返回数据: %s", response.json())
-            data = response.json()
-            if "msg" in data:
-                bot_instance.reply_to(message, data["msg"].encode('utf-8'))
-                asyncio.run(check_audio(message, 'audio', f"{data["id"]}.mp3"))
+                if text:
+                    text_id = response.headers.get('id')
+                    asyncio.run(check_audio(
+                        message, 'audio', f"{text_id}.mp3"))
+                else:
+                    log.error("ai服务器返回的数据结构异常: %s", data)
+                    bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
             else:
-                log.error("ai服务器返回的数据结构异常: %s", data)
+                log.error("请求ai服务端出错: %s", response)
                 bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
-        else:
-            log.error("请求ai服务端出错: %s", response)
-            bot_instance.reply_to(message, "对不起，我不知道怎么回复你")
 
     except Exception as err:
         log.error("发送消息出错: %s", err)
