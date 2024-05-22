@@ -50,7 +50,7 @@ def echo_all(message):
                 url=url, json=data, timeout=100, headers=headers, stream=True) as response:
             if response.status_code == 200:
                 text = ''
-                for line in response.iter_lines():
+                for line in response.iter_content():
                     if line:
                         decoded_line = line.decode('utf-8')
                         log.info("返回数据: %s", decoded_line)
