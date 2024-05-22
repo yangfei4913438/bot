@@ -54,7 +54,8 @@ def echo_all(message):
                     if line:
                         decoded_line = line.decode('utf-8')
                         log.info("返回数据: %s", decoded_line)
-                        bot_instance.send_message(message, decoded_line)
+                        bot_instance.send_message(
+                            message.chat.id, decoded_line)
                         text += decoded_line
 
                 if text:
